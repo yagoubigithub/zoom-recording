@@ -40,9 +40,12 @@
       };
 
       // Handle incoming audio from other clients and play it
-      socket.onmessage = function (event) {
-        const arrayBuffer = event.data;
+      socket.onmessage = async function (event) {
+        const arrayBuffer =  await new Response(event.data).arrayBuffer();
+        ;
 
+
+        console.log(arrayBuffer)
         audioContext.decodeAudioData(arrayBuffer, (buffer) => {
           console.log(buffer)
           const audioSource = audioContext.createBufferSource();
