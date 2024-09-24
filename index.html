@@ -23,7 +23,7 @@
       const source = audioContext.createMediaStreamSource(mediaStream);
       
       // Create WebSocket connection
-      socket = new WebSocket('wss://localhost:4005');
+      socket = new WebSocket('wss://zoom-recording-0uiz.onrender.com:4005');
 
       socket.onopen = () => {
         console.log('WebSocket connection established');
