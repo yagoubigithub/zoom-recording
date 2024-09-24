@@ -27,6 +27,7 @@ wss.on('connection', (ws) => {
 
   // When receiving audio data from a client
   ws.on('message', (data) => {
+  
     broadcast(data, ws); // Broadcast to other clients
   });
 
