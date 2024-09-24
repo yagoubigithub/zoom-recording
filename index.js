@@ -20,11 +20,10 @@ app.get("/", (request, response) => {
   response.sendFile(`${__dirname}/index.html`);
 });
 
-
 app.get("/users", (request, response) => {
-    console.log(users);
-    response.status(200).json(users);
-  });
+  console.log(users);
+  response.status(200).json(users);
+});
 const users = {};
 // Handle new socket connections
 io.on("connection", (socket) => {

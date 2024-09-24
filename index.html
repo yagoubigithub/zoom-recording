@@ -7,10 +7,53 @@
     <title>Broadcast live microphone over LAN</title>
 
     <style>
-        body{
+        body {
             margin: 0;
             padding: 0;
             font-family: Arial, Helvetica, sans-serif;
+        }
+        .container{
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+
+
+        }
+        .content{
+            flex : 9;
+        }
+        .input-container {
+            flex : 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .input-container input {
+            padding:12px;
+            width : 80%;
+
+        }
+        .input-container button{
+            width: 10%;
+            padding: 12px;
+            background-color: blueviolet;
+            color: white;
+        }
+        .content ul {
+            padding: 0;
+            list-style: none;
+
+        }
+
+
+        .content ul  li{
+            padding: 12px;
+            font-size: 20px;
+            background-color: #f2f2f2;
+            margin: 8px;
+
+
         }
     </style>
 </head>
@@ -20,9 +63,21 @@
 
 
 
-    <div >
-        <input type="text" placeholder="Name" id="name">
-        <button id="join-btn">Join</button>
+    <div class="container">
+
+
+        <div class="content">
+            <h1>Pepole in the room</h1>
+            <ul id="users-list">
+
+            </ul>
+        </div>
+
+        <div class="input-container" >
+            <input type="text" placeholder="Name" id="name">
+            <button id="join-btn">Join</button>
+        </div>
+
     </div>
     <script type="module">
         import { io } from "https://cdn.socket.io/4.7.5/socket.io.esm.min.js";
@@ -36,19 +91,22 @@
         document.getElementById("join-btn").addEventListener("click", () => {
 
             const name = document.getElementById("name").value;
-            alert(name);
-        
-           
-            
+            document.getElementById("name").value = '';
+
+
+
             let socket = io(url, {
                 transports: ['websocket'],
                 upgrade: false
             });
 
             socket.on('connect', () => {
+                
                 navigator.mediaDevices.getUserMedia({ audio: true, video: false })
                     .then((stream) => {
                         socket.emit("new-user", name);
+                        getUers();
+                       const inputContainer =  document.getElementsByClassName("input-container");
                         var madiaRecorder = new MediaRecorder(stream);
                         var audioChunks = [];
 
@@ -82,6 +140,17 @@
                     });
             });
 
+            socket.on('user-disconnected', (audioData) => {
+
+                getUers();
+
+            })
+            socket.on('user-connected', (audioData) => {
+
+
+                getUers();
+
+            })
             socket.on('audioStream', (audioData) => {
                 var newData = audioData.split(";");
                 newData[0] = "data:audio/ogg;";
@@ -95,19 +164,27 @@
             });
 
         })
-   
-   
+
+
 
 
         function getUers() {
-            fetch(`${url}/users`).then((res)=>res.json()).then(data=>{
-                
-                console.log(data)
-        
+            fetch(`${url}/users`).then((res) => res.json()).then(data => {
+
+                Object.keys(data).map(id => {
+                    const li = document.createElement("li")
+                    li.innerHTML = data[id];
+
+                    const usersList = document.getElementById("users-list")
+                    usersList.append(li)
+
+
+                })
+
             })
         }
 
-   </script>
+    </script>
 
 
 </body>
