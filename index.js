@@ -12,10 +12,13 @@ app.use(cors({
 const server = http.createServer(app);
 const io = socketIO(server);
 
-app.get("/", (req, res) => {
-    res.send("Server is running.");
-});
 
+
+app.use(express.static(path.join(__dirname)));
+
+app.get("/", (request, response) => {
+  response.sendFile(`${__dirname}/index.html`);
+});
 // Handle new socket connections
 io.on('connection', (socket) => {
 
