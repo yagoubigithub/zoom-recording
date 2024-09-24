@@ -42,6 +42,6 @@ app.get("/", (request, response) => {
 });
 
 // Start the server
-server.listen(4005, '192.168.43.196' ,  () => {
+server.listen(4005 ,  () => {
   console.log('Server is listening on port 4005');
 });
