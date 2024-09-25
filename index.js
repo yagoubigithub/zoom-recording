@@ -20,6 +20,10 @@ app.get("/", (request, response) => {
   response.sendFile(`${__dirname}/index.html`);
 });
 
+app.get("/client", (request, response) => {
+  response.sendFile(`${__dirname}/client.html`);
+});
+
 app.get("/users", (request, response) => {
   console.log(users);
   response.status(200).json(users);
@@ -31,6 +35,7 @@ io.on("connection", (socket) => {
 
   // Handle incoming audio stream
   socket.on("audioStream", (audioData) => {
+    
     socket.broadcast.emit("audioStream", audioData);
   });
 
